@@ -1,0 +1,22 @@
+query MyQuery2 {
+  listQuizzes {
+    items {
+      createdAt
+      quizName
+      id
+      questions {
+        items {
+          questionNumber
+          possibleAnswers {
+            items {
+              answerText
+            }
+          }
+          question {
+            questionText
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
 {
   "private": true,
   "scripts": {
+    "clean": "rm -rf out",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -8,26 +9,43 @@
     "format": "prettier --write .",
     "lint": "eslint . --ext ts --ext tsx --ext js",
     "test": "jest",
-    "test-all": "yarn lint && yarn type-check && yarn test"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "yarn run type-check"
-    }
-  },
-  "lint-staged": {
-    "*.@(ts|tsx)": [
-      "yarn lint",
-      "yarn format"
-    ]
+    "test-all": "yarn lint && yarn type-check && yarn test",
+    "generate:types": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@apollo/client": "^3.5.6",
+    "@aws-amplify/ui-react": "^2.1.4",
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
+    "@fontsource/roboto": "^4.5.1",
+    "@graphql-codegen/cli": "^2.3.0",
+    "@mui/icons-material": "^5.2.5",
+    "@mui/material": "^5.2.5",
+    "@sls-next/lambda-at-edge": "^3.7.0-alpha.0",
+    "axios": "^0.24.0",
+    "cookie": "^0.4.1",
+    "cookie-cutter": "^0.2.0",
+    "cookie-storage": "^6.1.0",
+    "cookies-next": "^2.0.3",
+    "fs": "0.0.1-security",
+    "graphql": "^16.2.0",
+    "graphql-tag": "^2.12.6",
+    "introspection": "^1.1.0",
+    "jwt-decode": "^3.1.2",
+    "material-ui-search-bar": "^1.0.0",
     "next": "latest",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-cookie": "^4.1.1",
+    "react-dom": "^17.0.2",
+    "react-shapes": "^0.1.0",
+    "sass": "^1.45.1"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "2.3.0",
+    "@graphql-codegen/introspection": "2.1.0",
+    "@graphql-codegen/typescript": "^2.4.1",
+    "@graphql-codegen/typescript-operations": "^2.2.1",
+    "@graphql-codegen/typescript-react-apollo": "^3.2.2",
     "@testing-library/react": "^11.2.5",
     "@types/jest": "^26.0.23",
     "@types/node": "^14.14.25",
@@ -38,11 +56,9 @@
     "eslint": "^7.19.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-react": "^7.19.0",
-    "husky": "^4.2.3",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.0.4",
     "jest-watch-typeahead": "^0.6.1",
-    "lint-staged": "^10.0.10",
     "prettier": "^2.0.2",
     "typescript": "^4.1.3"
   }
