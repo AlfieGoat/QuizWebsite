@@ -6,12 +6,13 @@ import QuizSearchCard from '../../sections/QuizSearchCard'
 import QuizSearchPreview from '../../sections/QuizSearchPreview'
 import SearchBar from '../../sections/search'
 import { makeQuery } from '../../utils/fetch'
-import { getTokenFromRequest, authRedirectIfNeededOnServer } from '../../utils/auth'
+import {
+  getTokenFromRequest,
+  authRedirectIfNeededOnServer,
+} from '../../utils/auth'
 import styles from './index.module.scss'
 
-
 export async function getServerSideProps(context) {
-
   const query = `query MyQuery2 {
     listQuizzes {
       items {
@@ -35,7 +36,7 @@ export async function getServerSideProps(context) {
     }
   }`
   const redirect = authRedirectIfNeededOnServer(context)
-  if (redirect) return redirect;
+  if (redirect) return redirect
   const auth = getTokenFromRequest(context)
   // const query: string = query;
   const result = (await makeQuery(query, auth)).data.data as MyQuery2Query
@@ -46,20 +47,24 @@ export async function getServerSideProps(context) {
 }
 
 interface QuizzesProps {
-  quizzes?: MyQuery2Query;
-  redirect?: any;
+  quizzes?: MyQuery2Query
+  redirect?: any
 }
 
 const Quizzes = (props: QuizzesProps): JSX.Element => {
   if (props.redirect) return <></>
-  console.log(JSON.stringify(props));
-  const [previewQuiz, setPreviewQuiz] = useState(props.quizzes.listQuizzes.items[0]);
+  console.log(JSON.stringify(props))
+  const [previewQuiz, setPreviewQuiz] = useState(
+    props.quizzes.listQuizzes.items[0]
+  )
+  const [searchText, setSearchText] = useState('')
+
   return (
     <>
       <NavBar />
       <div className={styles.contentContainer}>
         <div className={styles.searchBar}>
-          <SearchBar />
+          <SearchBar searchText={searchText} setSearchText={setSearchText} />
         </div>
         <Typography variant="h4" className={styles.heading}>
           Quizzes
@@ -69,20 +74,24 @@ const Quizzes = (props: QuizzesProps): JSX.Element => {
         </Typography>
         <div className={styles.quizContainer}>
           <div className={styles.quizSearchCards}>
-            {props.quizzes.listQuizzes.items.map((quiz, i) => {
-              return (
-                <QuizSearchCard
-                  quizTitle={quiz.quizName}
-                  creationDate={quiz.createdAt}
-                  quiz={quiz}
-                  setPreviewQuiz={setPreviewQuiz}
-                  key={i}
-                />
+            {props.quizzes.listQuizzes.items
+              .filter((quiz) =>
+                quiz.quizName.toLowerCase().includes(searchText.toLowerCase())
               )
-            })}
+              .map((quiz, i) => {
+                return (
+                  <QuizSearchCard
+                    quizTitle={quiz.quizName}
+                    creationDate={quiz.createdAt}
+                    quiz={quiz}
+                    setPreviewQuiz={setPreviewQuiz}
+                    key={i}
+                  />
+                )
+              })}
           </div>
           <div className={styles.quizSearchPreview}>
-            <QuizSearchPreview quiz={previewQuiz}/>
+            <QuizSearchPreview quiz={previewQuiz} />
           </div>
         </div>
       </div>

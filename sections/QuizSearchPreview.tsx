@@ -46,7 +46,6 @@ interface QuizSearchPreviewProps {
 }
 
 const QuizSearchPreview = (props: QuizSearchPreviewProps): JSX.Element => {
-  console.log(JSON.stringify(props.quiz));
   return (
     <Box sx={{ minWidth: 275, maxHeight: 100 }}>
       <Card variant="outlined">
