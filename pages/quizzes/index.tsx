@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import { MyQuery2Query } from '../../generated/graphql'
 import NavBar from '../../sections/NavBar'
 import QuizSearchCard from '../../sections/QuizSearchCard'
@@ -46,11 +46,14 @@ export async function getServerSideProps(context) {
 }
 
 interface QuizzesProps {
-  quizzes: MyQuery2Query
+  quizzes?: MyQuery2Query;
+  redirect?: any;
 }
 
 const Quizzes = (props: QuizzesProps): JSX.Element => {
+  if (props.redirect) return <></>
   console.log(JSON.stringify(props));
+  const [previewQuiz, setPreviewQuiz] = useState(props.quizzes.listQuizzes.items[0]);
   return (
     <>
       <NavBar />
@@ -71,13 +74,15 @@ const Quizzes = (props: QuizzesProps): JSX.Element => {
                 <QuizSearchCard
                   quizTitle={quiz.quizName}
                   creationDate={quiz.createdAt}
+                  quiz={quiz}
+                  setPreviewQuiz={setPreviewQuiz}
                   key={i}
                 />
               )
             })}
           </div>
           <div className={styles.quizSearchPreview}>
-            <QuizSearchPreview />
+            <QuizSearchPreview quiz={previewQuiz}/>
           </div>
         </div>
       </div>

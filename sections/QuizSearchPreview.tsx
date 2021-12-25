@@ -1,11 +1,13 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import styles from './QuizSearchPreview.module.scss';
+import * as React from 'react'
+import Box from '@mui/material/Box'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
+import styles from './QuizSearchPreview.module.scss'
+import { MyQuery2Query } from '../generated/graphql'
+
+const ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
 
 const bull = (
   <Box
@@ -14,52 +16,65 @@ const bull = (
   >
     •
   </Box>
-);
+)
 
-const Question = (): JSX.Element => {
+interface QuestionProps {
+  questionText: string
+  questionOptions: string[]
+  questionNumber: number
+}
+
+const Question = (props: QuestionProps): JSX.Element => {
   return (
     <>
-    <Typography variant="body1">
-    1) What breed is Heidi
-  </Typography>
-  <Typography paddingLeft={1.5} variant="body2">
-    a. Golden retriever <br/>
-    b. Vizsla <br/>
-    c. Beagle <br/>
-    d. Lab
-  </Typography>
-  </>
+      <Typography variant="body1">
+        {props.questionNumber}) {props.questionText}
+      </Typography>
+      <Typography paddingLeft={1.5} variant="body2">
+        {props.questionOptions.map((option, i) => (
+          <>
+            {ALPHABET[i]}. {option}<br/>
+          </>
+        ))}
+      </Typography>
+    </>
   )
 }
 
-const card = (
-  <React.Fragment>
-    <CardContent style={{maxHeight:400, overflow: 'auto'}}>
-    <div className={styles.headingDiv}>
-        <Typography variant="h5" component="div">
-          Quiz Name
-        </Typography>
-        <div className={styles.button}>
-        <Button size="small" >Open Quiz</Button>
-        </div>
-      </div>
-      <Typography sx={{ mb: 1.5 }} color="text.secondary">
-        QuizPoint1 {bull} QuizPoint2
-      </Typography>
-      <Question/>
-      <Question/>
-      <Question/>
-      <Question/>
-    </CardContent>
-  </React.Fragment>
-);
-
-const QuizSearchPreview = (): JSX.Element => {
-  return (
-    <Box sx={{ minWidth: 275, maxHeight: 100 }}>
-      <Card variant="outlined">{card}</Card>
-    </Box>
-  );
+interface QuizSearchPreviewProps {
+  quiz: MyQuery2Query['listQuizzes']['items'][0]
 }
 
-export default QuizSearchPreview;
+const QuizSearchPreview = (props: QuizSearchPreviewProps): JSX.Element => {
+  console.log(JSON.stringify(props.quiz));
+  return (
+    <Box sx={{ minWidth: 275, maxHeight: 100 }}>
+      <Card variant="outlined">
+        {' '}
+        <CardContent style={{ maxHeight: 400, overflow: 'auto' }}>
+          <div className={styles.headingDiv}>
+            <Typography variant="h5" component="div">
+              {props.quiz.quizName}
+            </Typography>
+            <div className={styles.button}>
+              <Button size="small">Open Quiz</Button>
+            </div>
+          </div>
+          <Typography sx={{ mb: 1.5 }} color="text.secondary">
+            QuizPoint1 {bull} QuizPoint2
+          </Typography>
+          {props.quiz.questions.items.map((question, i) => (
+            <Question
+              questionNumber={question.questionNumber}
+              questionText={question.question.questionText}
+              questionOptions={question.possibleAnswers.items.map(item => item.answerText)}
+              key={i}
+            />
+          ))}
+        </CardContent>
+      </Card>
+    </Box>
+  )
+}
+
+export default QuizSearchPreview

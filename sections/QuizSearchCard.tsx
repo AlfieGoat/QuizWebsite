@@ -6,6 +6,7 @@ import CardContent from '@mui/material/CardContent'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import styles from './QuizSearchCard.module.scss'
+import { MyQuery2Query } from '../generated/graphql'
 
 const bull = (
   <Box
@@ -19,27 +20,34 @@ const bull = (
 interface QuizSearchCardProps {
   quizTitle: string;
   creationDate: string;
+  quiz: MyQuery2Query['listQuizzes']['items'][0];
+  setPreviewQuiz: (quiz: MyQuery2Query['listQuizzes']['items'][0]) => void;
 }
 
-export default function QuizSearchCard(props: QuizSearchCardProps): JSX.Element {
+export default function QuizSearchCard(
+  props: QuizSearchCardProps
+): JSX.Element {
+  const setPreviewQuiz = () => props.setPreviewQuiz(props.quiz)
   return (
     <Box sx={{ minWidth: 275 }} paddingBottom={2}>
-      <Card variant="outlined"><CardContent>
-      <div className={styles.headingDiv}>
-        <Typography variant="h5" component="div">
-          {props.quizTitle}
-        </Typography>
-        <div className={styles.button}>
-        <Button size="small" >Preview</Button>
-        </div>
-      </div>
-      <Typography sx={{ mb: 1.5, fontSize: 11 }} color="text.secondary">
-        {bull}
-      </Typography>
-      <Typography variant="body2">
-        Created at: {props.creationDate}
-      </Typography>
-    </CardContent></Card>
+      <Card variant="outlined">
+        <CardContent>
+          <div className={styles.headingDiv}>
+            <Typography variant="h5" component="div">
+              {props.quizTitle}
+            </Typography>
+            <div className={styles.button}>
+              <Button size="small" onClick={setPreviewQuiz}>Preview</Button>
+            </div>
+          </div>
+          <Typography sx={{ mb: 1.5, fontSize: 11 }} color="text.secondary">
+            {bull}
+          </Typography>
+          <Typography variant="body2">
+            Created at: {props.creationDate}
+          </Typography>
+        </CardContent>
+      </Card>
     </Box>
   )
 }
