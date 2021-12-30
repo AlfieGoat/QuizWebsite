@@ -5,7 +5,12 @@ import {
   Triangle,
 } from 'react-shapes'
 
-export const LandingHead = (): JSX.Element => {
+
+interface LandingHeadProps {
+  redirectToQuizzesFunc: () => void;
+}
+
+export const LandingHead = (props: LandingHeadProps): JSX.Element => {
   return (
     <div className={styles.background}>
       <div className={styles.container}>
@@ -39,7 +44,7 @@ export const LandingHead = (): JSX.Element => {
             Have a go!
           </Typography>
           <div className={styles.buttonContainer}>
-            <Button variant="contained">Take me to the Quizzes!</Button>
+            <Button variant="contained" onClick={props.redirectToQuizzesFunc}>Take me to the Quizzes!</Button>
           </div>
         </div>
         <div className={styles.right}>

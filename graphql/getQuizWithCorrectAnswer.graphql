@@ -1,0 +1,34 @@
+query getQuizWithCorrectAnswer($id: ID!) {
+  getQuiz(id: $id) {
+    quizName
+    createdAt
+    questions {
+      items {
+        id
+        quizID
+        questionNumber
+        question {
+          id
+          questionText
+          questionContainerId
+        }
+        possibleAnswers {
+          items {
+            id
+            answerText
+            questionContainerId
+          }
+        }
+        correctAnswer {
+          answer {
+            questionContainerId
+            id
+            answerText
+          }
+          id
+        }
+      }
+    }
+    id
+  }
+}

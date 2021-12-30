@@ -6,5 +6,7 @@ export const COGNITO_LOGIN_URL = 'https://quiz-aggoatch.auth.us-east-1.amazoncog
 export enum COGNITO_GROUPS {
   ADMIN = "admin",
   MODERATOR = "moderator",
-  user = "user",
+  USER = "user",
 }
+
+export const ALPHABET = 'abcdefghijklmnopqrstuvwxyz'

@@ -472,14 +472,148 @@ export type UpdateQuizInput = {
   quizName?: InputMaybe<Scalars['String']>;
 };
 
-export type MyQuery2QueryVariables = Exact<{ [key: string]: never; }>;
+export type GetQuizQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
 
 
-export type MyQuery2Query = { __typename?: 'Query', listQuizzes?: { __typename?: 'ModelQuizConnection', items?: Array<{ __typename?: 'Quiz', createdAt: any, quizName: string, id: string, questions?: { __typename?: 'ModelQuestionContainerConnection', items?: Array<{ __typename?: 'QuestionContainer', questionNumber: number, possibleAnswers?: { __typename?: 'ModelAnswerConnection', items?: Array<{ __typename?: 'Answer', answerText: string } | null | undefined> | null | undefined } | null | undefined, question: { __typename?: 'Question', questionText: string } } | null | undefined> | null | undefined } | null | undefined } | null | undefined> | null | undefined } | null | undefined };
+export type GetQuizQuery = { __typename?: 'Query', getQuiz?: { __typename?: 'Quiz', quizName: string, createdAt: any, id: string, questions?: { __typename?: 'ModelQuestionContainerConnection', items?: Array<{ __typename?: 'QuestionContainer', id: string, quizID: string, questionNumber: number, question: { __typename?: 'Question', id: string, questionText: string, questionContainerId: string }, possibleAnswers?: { __typename?: 'ModelAnswerConnection', items?: Array<{ __typename?: 'Answer', id: string, answerText: string, questionContainerId: string } | null | undefined> | null | undefined } | null | undefined } | null | undefined> | null | undefined } | null | undefined } | null | undefined };
+
+export type GetQuizWithCorrectAnswerQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
 
 
-export const MyQuery2Document = gql`
-    query MyQuery2 {
+export type GetQuizWithCorrectAnswerQuery = { __typename?: 'Query', getQuiz?: { __typename?: 'Quiz', quizName: string, createdAt: any, id: string, questions?: { __typename?: 'ModelQuestionContainerConnection', items?: Array<{ __typename?: 'QuestionContainer', id: string, quizID: string, questionNumber: number, question: { __typename?: 'Question', id: string, questionText: string, questionContainerId: string }, possibleAnswers?: { __typename?: 'ModelAnswerConnection', items?: Array<{ __typename?: 'Answer', id: string, answerText: string, questionContainerId: string } | null | undefined> | null | undefined } | null | undefined, correctAnswer: { __typename?: 'CorrectAnswer', id: string, answer: { __typename?: 'Answer', questionContainerId: string, id: string, answerText: string } } } | null | undefined> | null | undefined } | null | undefined } | null | undefined };
+
+export type ListQuizzesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ListQuizzesQuery = { __typename?: 'Query', listQuizzes?: { __typename?: 'ModelQuizConnection', items?: Array<{ __typename?: 'Quiz', createdAt: any, quizName: string, id: string, questions?: { __typename?: 'ModelQuestionContainerConnection', items?: Array<{ __typename?: 'QuestionContainer', questionNumber: number, possibleAnswers?: { __typename?: 'ModelAnswerConnection', items?: Array<{ __typename?: 'Answer', answerText: string } | null | undefined> | null | undefined } | null | undefined, question: { __typename?: 'Question', questionText: string } } | null | undefined> | null | undefined } | null | undefined } | null | undefined> | null | undefined } | null | undefined };
+
+
+export const GetQuizDocument = gql`
+    query getQuiz($id: ID!) {
+  getQuiz(id: $id) {
+    quizName
+    createdAt
+    questions {
+      items {
+        id
+        quizID
+        questionNumber
+        question {
+          id
+          questionText
+          questionContainerId
+        }
+        possibleAnswers {
+          items {
+            id
+            answerText
+            questionContainerId
+          }
+        }
+      }
+    }
+    id
+  }
+}
+    `;
+
+/**
+ * __useGetQuizQuery__
+ *
+ * To run a query within a React component, call `useGetQuizQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetQuizQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetQuizQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetQuizQuery(baseOptions: Apollo.QueryHookOptions<GetQuizQuery, GetQuizQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetQuizQuery, GetQuizQueryVariables>(GetQuizDocument, options);
+      }
+export function useGetQuizLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetQuizQuery, GetQuizQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetQuizQuery, GetQuizQueryVariables>(GetQuizDocument, options);
+        }
+export type GetQuizQueryHookResult = ReturnType<typeof useGetQuizQuery>;
+export type GetQuizLazyQueryHookResult = ReturnType<typeof useGetQuizLazyQuery>;
+export type GetQuizQueryResult = Apollo.QueryResult<GetQuizQuery, GetQuizQueryVariables>;
+export const GetQuizWithCorrectAnswerDocument = gql`
+    query getQuizWithCorrectAnswer($id: ID!) {
+  getQuiz(id: $id) {
+    quizName
+    createdAt
+    questions {
+      items {
+        id
+        quizID
+        questionNumber
+        question {
+          id
+          questionText
+          questionContainerId
+        }
+        possibleAnswers {
+          items {
+            id
+            answerText
+            questionContainerId
+          }
+        }
+        correctAnswer {
+          answer {
+            questionContainerId
+            id
+            answerText
+          }
+          id
+        }
+      }
+    }
+    id
+  }
+}
+    `;
+
+/**
+ * __useGetQuizWithCorrectAnswerQuery__
+ *
+ * To run a query within a React component, call `useGetQuizWithCorrectAnswerQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetQuizWithCorrectAnswerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetQuizWithCorrectAnswerQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetQuizWithCorrectAnswerQuery(baseOptions: Apollo.QueryHookOptions<GetQuizWithCorrectAnswerQuery, GetQuizWithCorrectAnswerQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetQuizWithCorrectAnswerQuery, GetQuizWithCorrectAnswerQueryVariables>(GetQuizWithCorrectAnswerDocument, options);
+      }
+export function useGetQuizWithCorrectAnswerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetQuizWithCorrectAnswerQuery, GetQuizWithCorrectAnswerQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetQuizWithCorrectAnswerQuery, GetQuizWithCorrectAnswerQueryVariables>(GetQuizWithCorrectAnswerDocument, options);
+        }
+export type GetQuizWithCorrectAnswerQueryHookResult = ReturnType<typeof useGetQuizWithCorrectAnswerQuery>;
+export type GetQuizWithCorrectAnswerLazyQueryHookResult = ReturnType<typeof useGetQuizWithCorrectAnswerLazyQuery>;
+export type GetQuizWithCorrectAnswerQueryResult = Apollo.QueryResult<GetQuizWithCorrectAnswerQuery, GetQuizWithCorrectAnswerQueryVariables>;
+export const ListQuizzesDocument = gql`
+    query listQuizzes {
   listQuizzes {
     items {
       createdAt
@@ -504,28 +638,28 @@ export const MyQuery2Document = gql`
     `;
 
 /**
- * __useMyQuery2Query__
+ * __useListQuizzesQuery__
  *
- * To run a query within a React component, call `useMyQuery2Query` and pass it any options that fit your needs.
- * When your component renders, `useMyQuery2Query` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useListQuizzesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListQuizzesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useMyQuery2Query({
+ * const { data, loading, error } = useListQuizzesQuery({
  *   variables: {
  *   },
  * });
  */
-export function useMyQuery2Query(baseOptions?: Apollo.QueryHookOptions<MyQuery2Query, MyQuery2QueryVariables>) {
+export function useListQuizzesQuery(baseOptions?: Apollo.QueryHookOptions<ListQuizzesQuery, ListQuizzesQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MyQuery2Query, MyQuery2QueryVariables>(MyQuery2Document, options);
+        return Apollo.useQuery<ListQuizzesQuery, ListQuizzesQueryVariables>(ListQuizzesDocument, options);
       }
-export function useMyQuery2LazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyQuery2Query, MyQuery2QueryVariables>) {
+export function useListQuizzesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListQuizzesQuery, ListQuizzesQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MyQuery2Query, MyQuery2QueryVariables>(MyQuery2Document, options);
+          return Apollo.useLazyQuery<ListQuizzesQuery, ListQuizzesQueryVariables>(ListQuizzesDocument, options);
         }
-export type MyQuery2QueryHookResult = ReturnType<typeof useMyQuery2Query>;
-export type MyQuery2LazyQueryHookResult = ReturnType<typeof useMyQuery2LazyQuery>;
-export type MyQuery2QueryResult = Apollo.QueryResult<MyQuery2Query, MyQuery2QueryVariables>;
+export type ListQuizzesQueryHookResult = ReturnType<typeof useListQuizzesQuery>;
+export type ListQuizzesLazyQueryHookResult = ReturnType<typeof useListQuizzesLazyQuery>;
+export type ListQuizzesQueryResult = Apollo.QueryResult<ListQuizzesQuery, ListQuizzesQueryVariables>;

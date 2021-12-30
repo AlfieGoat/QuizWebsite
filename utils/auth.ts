@@ -1,13 +1,26 @@
 import jwt_decode from 'jwt-decode'
 import { COGNITO_LOGIN_URL } from './constants'
 import { useEffect } from 'react'
-import { useRouter } from 'next/router'
-import { checkCookies, getCookie, setCookies } from 'cookies-next'
+import { NextRouter, Router, useRouter } from 'next/router'
+import {
+  checkCookies,
+  getCookie,
+  removeCookies,
+  setCookies,
+} from 'cookies-next'
+
+export const getGroup = (context): string => {
+  const authToken = getTokenFromRequest(context)
+  const group = (jwt_decode(authToken) as any)['cognito:groups']
+  if (group.length > 1) console.warn('User is part of more than 1 group')
+  return group[0]
+}
 
 export const getTokenFromRequest = (context) => {
-  const cookie = context.req.headers.cookie
-    .split(';')
-    .find((c) => c.trim().startsWith(`id_token=`))
+  const cookie =
+    context.req.headers.cookie
+      ?.split(';')
+      .find((c) => c.trim().startsWith(`id_token=`)) ?? false
 
   if (!cookie) return undefined
   return cookie.split('=')[1]
@@ -73,8 +86,15 @@ export const setAuthCookie = () => {
       setCookies('access_token', access_token)
       console.log(jwt_decode(id_token))
       router.push('/')
-    } catch {
+} catch {
       console.log('No token to set')
     }
   }, [router.isReady])
+}
+
+export const logoutClient = (router: NextRouter): void => {
+  if (!router.isReady) return
+  removeCookies('id_token')
+  removeCookies('access_token')
+  router.reload()
 }

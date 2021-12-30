@@ -1,19 +1,21 @@
 import { Typography } from '@mui/material'
 import React, { useState } from 'react'
-import { MyQuery2Query } from '../../generated/graphql'
+import { ListQuizzesQuery } from '../../generated/graphql'
 import NavBar from '../../sections/NavBar'
 import QuizSearchCard from '../../sections/QuizSearchCard'
 import QuizSearchPreview from '../../sections/QuizSearchPreview'
-import SearchBar from '../../sections/search'
+import SearchBar from '../../sections/SearchBar'
 import { makeQuery } from '../../utils/fetch'
 import {
   getTokenFromRequest,
   authRedirectIfNeededOnServer,
+  logoutClient,
 } from '../../utils/auth'
 import styles from './index.module.scss'
+import { useRouter } from 'next/router'
 
 export async function getServerSideProps(context) {
-  const query = `query MyQuery2 {
+  const query = `query listQuizzes {
     listQuizzes {
       items {
         createdAt
@@ -35,11 +37,12 @@ export async function getServerSideProps(context) {
       }
     }
   }`
+  console.log(context.req.headers)
   const redirect = authRedirectIfNeededOnServer(context)
   if (redirect) return redirect
   const auth = getTokenFromRequest(context)
   // const query: string = query;
-  const result = (await makeQuery(query, auth)).data.data as MyQuery2Query
+  const result = (await makeQuery(query, auth)).data.data as ListQuizzesQuery
   // console.log(JSON.stringify(result))
   return {
     props: { quizzes: result }, // will be passed to the page component as props
@@ -47,21 +50,20 @@ export async function getServerSideProps(context) {
 }
 
 interface QuizzesProps {
-  quizzes?: MyQuery2Query
+  quizzes?: ListQuizzesQuery
   redirect?: any
 }
 
 const Quizzes = (props: QuizzesProps): JSX.Element => {
   if (props.redirect) return <></>
-  console.log(JSON.stringify(props))
   const [previewQuiz, setPreviewQuiz] = useState(
     props.quizzes.listQuizzes.items[0]
   )
   const [searchText, setSearchText] = useState('')
-
+  const router = useRouter(); 
   return (
     <>
-      <NavBar />
+      <NavBar router={router}/>
       <div className={styles.contentContainer}>
         <div className={styles.searchBar}>
           <SearchBar searchText={searchText} setSearchText={setSearchText} />
@@ -91,7 +93,7 @@ const Quizzes = (props: QuizzesProps): JSX.Element => {
               })}
           </div>
           <div className={styles.quizSearchPreview}>
-            <QuizSearchPreview quiz={previewQuiz} />
+            <QuizSearchPreview quiz={previewQuiz} router={router}/>
           </div>
         </div>
       </div>

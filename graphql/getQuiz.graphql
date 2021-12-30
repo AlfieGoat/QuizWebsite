@@ -1,0 +1,26 @@
+query getQuiz($id: ID!) {
+  getQuiz(id: $id) {
+    quizName
+    createdAt
+    questions {
+      items {
+        id
+        quizID
+        questionNumber
+        question {
+          id
+          questionText
+          questionContainerId
+        }
+        possibleAnswers {
+          items {
+            id
+            answerText
+            questionContainerId
+          }
+        }
+      }
+    }
+    id
+  }
+}

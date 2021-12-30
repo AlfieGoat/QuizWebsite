@@ -5,9 +5,10 @@ import CardContent from '@mui/material/CardContent'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import styles from './QuizSearchPreview.module.scss'
-import { MyQuery2Query } from '../generated/graphql'
-
-const ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
+import { ListQuizzesQuery } from '../generated/graphql'
+import { openQuiz } from '../utils/openQuiz'
+import { NextRouter } from 'next/router'
+import { ALPHABET} from '../utils/constants'
 
 const bull = (
   <Box
@@ -24,6 +25,17 @@ interface QuestionProps {
   questionNumber: number
 }
 
+interface QuestionOptionProps {
+  index: number;
+  optionText: string;
+}
+
+const QuestionOption = (props: QuestionOptionProps): JSX.Element => {
+  return (          <>
+    {ALPHABET[props.index]}. {props.optionText}<br/>
+  </>)
+}
+
 const Question = (props: QuestionProps): JSX.Element => {
   return (
     <>
@@ -32,9 +44,7 @@ const Question = (props: QuestionProps): JSX.Element => {
       </Typography>
       <Typography paddingLeft={1.5} variant="body2">
         {props.questionOptions.map((option, i) => (
-          <>
-            {ALPHABET[i]}. {option}<br/>
-          </>
+          <QuestionOption index={i} optionText={option} key={i}/>
         ))}
       </Typography>
     </>
@@ -42,7 +52,8 @@ const Question = (props: QuestionProps): JSX.Element => {
 }
 
 interface QuizSearchPreviewProps {
-  quiz: MyQuery2Query['listQuizzes']['items'][0]
+  quiz: ListQuizzesQuery['listQuizzes']['items'][0];
+  router: NextRouter;
 }
 
 const QuizSearchPreview = (props: QuizSearchPreviewProps): JSX.Element => {
@@ -56,7 +67,7 @@ const QuizSearchPreview = (props: QuizSearchPreviewProps): JSX.Element => {
               {props.quiz.quizName}
             </Typography>
             <div className={styles.button}>
-              <Button size="small">Open Quiz</Button>
+              <Button size="small" onClick={() => openQuiz(props.quiz.id, props.router)}>Open Quiz</Button>
             </div>
           </div>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">

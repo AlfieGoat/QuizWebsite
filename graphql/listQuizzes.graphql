@@ -1,4 +1,4 @@
-query MyQuery2 {
+query listQuizzes {
   listQuizzes {
     items {
       createdAt
