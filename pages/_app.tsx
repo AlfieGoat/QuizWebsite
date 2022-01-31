@@ -19,7 +19,7 @@ const theme = createTheme({
     },
   })
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps }): JSX.Element {
   setAuthCookie()
   authRedirectIfNeededOnClient();
   return (

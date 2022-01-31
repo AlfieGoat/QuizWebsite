@@ -1,24 +1,27 @@
-import { Button, Typography } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
+import TextField from '@mui/material/TextField'
+import { useRouter } from 'next/router'
+import React, { useReducer } from 'react'
 import { ListQuizzesQuery } from '../../generated/graphql'
 import NavBar from '../../sections/NavBar'
-import styles from './index.module.scss'
-import { useRouter } from 'next/router'
-import TextField from '@mui/material/TextField'
-import React, { useReducer } from 'react'
 import Question from '../../sections/QuizCreateQuestion'
+import { QUIZZES_LINK } from '../../utils/constants'
+import { createQuizWithQuestions } from '../../utils/graphQlMutations'
+import styles from './index.module.scss'
 
 interface QuizzesProps {
   quizzes?: ListQuizzesQuery
   redirect?: any
 }
 
-interface Question {
+export interface Question {
   questionText: string
   options: string[]
 }
 
-interface State {
+export interface State {
   questions: Question[]
+  quizName: string
 }
 
 export type Action =
@@ -36,11 +39,30 @@ export type Action =
         newOptionText: string
       }
     }
+  | {
+      type: 'edit-quiz-name'
+      payload: {
+        newQuizName: string
+      }
+    }
+  | {
+      type: 'add-option'
+      payload: {
+        questionNumber: number
+      }
+    }
+  | {
+      type: 'remove-option'
+      payload: {
+        questionNumber: number
+      }
+    }
 
-function reducer(state: State, action: Action) {
+export function reducer(state: State, action: Action): State {
   switch (action.type) {
     case 'add-question':
       return {
+        ...state,
         questions: [
           ...state.questions,
           { questionText: '', options: ['', '', '', ''] },
@@ -50,11 +72,13 @@ function reducer(state: State, action: Action) {
       const newQuestions = state.questions
       newQuestions.splice(action.payload.questionNumber, 1)
       return {
+        ...state,
         questions: newQuestions,
       }
     }
     case 'edit-question-text':
       return {
+        ...state,
         questions: state.questions.map((question, questionNumber) =>
           questionNumber === action.payload.questionNumber
             ? { ...question, questionText: action.payload.newQuestionText }
@@ -63,6 +87,7 @@ function reducer(state: State, action: Action) {
       }
     case 'edit-question-option-text':
       return {
+        ...state,
         questions: state.questions.map((question, questionNumber) =>
           questionNumber === action.payload.questionNumber
             ? {
@@ -76,6 +101,39 @@ function reducer(state: State, action: Action) {
             : question
         ),
       }
+    case 'edit-quiz-name':
+      return {
+        ...state,
+        quizName: action.payload.newQuizName,
+      }
+    case 'add-option':
+      return {
+        ...state,
+        questions: state.questions.map((question, questionNumber) => {
+          if (questionNumber === action.payload.questionNumber) {
+            if (question.options.length >= 5)
+              return question
+            return {
+              ...question,
+              options: [...question.options, ''],
+            }
+          } return question
+        }),
+      }
+      case 'remove-option':
+      return {
+        ...state,
+        questions: state.questions.map((question, questionNumber) => {
+          if (questionNumber === action.payload.questionNumber) {
+            if (question.options.length <= 3)
+              return question
+            return {
+              ...question,
+              options: [...question.options.slice(0, question.options.length-1)],
+            }
+          } return question
+        }),
+      }
     default:
       return state
   }
@@ -85,28 +143,59 @@ const CreateQuiz = (props: QuizzesProps): JSX.Element => {
   if (props.redirect) return <></>
   const router = useRouter()
 
-  const [{ questions }, dispatch] = useReducer(reducer, {
+  const [{ questions, quizName }, dispatch] = useReducer(reducer, {
     questions: [{ questionText: '', options: ['', '', '', ''] }],
+    quizName: '',
   })
 
   return (
     <>
       <NavBar router={router} />
-      {JSON.stringify(questions)}
       <div className={styles.contentContainer}>
         <Typography variant="h4" className={styles.heading}>
           Create a quiz
         </Typography>
-        <TextField label="Quiz Name" />
-        <Button onClick={() => dispatch({ type: 'add-question' })}>
-          Add a Question
-        </Button>
+        <div>
+          <TextField
+            label="Quiz Name"
+            onChange={(e) =>
+              dispatch({
+                type: 'edit-quiz-name',
+                payload: { newQuizName: e.target.value },
+              })
+            }
+          />
+          <Box sx={{ float: 'right' }}>
+            <Button
+              sx={{ marginRight: 2 }}
+              variant="contained"
+              color="secondary"
+              onClick={async () => {
+                await createQuizWithQuestions(questions, quizName)
+                await router.push(QUIZZES_LINK)
+              }}
+            >
+              Create Quiz
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => dispatch({ type: 'add-question' })}
+            >
+              ➕ Add a Question
+            </Button>
+          </Box>
+        </div>
         {questions.map((question, questionNumber) => {
           return (
-            <Question dispatch={dispatch} questionNumber={questionNumber} key={questionNumber}/>
+            <Question
+              dispatch={dispatch}
+              questionNumber={questionNumber}
+              key={questionNumber}
+              initialValue={question}
+            />
           )
         })}
-        <Button onClick={() => sendFormData(formState)}>Send</Button>
       </div>
     </>
   )

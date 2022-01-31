@@ -1,0 +1,5 @@
+mutation UpdateAnswerText($newAnswerText: String!, $answerId: ID!) {
+  updateAnswer(input: {id: $answerId, answerText: $newAnswerText}) {
+    id
+  }
+}

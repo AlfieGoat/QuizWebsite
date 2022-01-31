@@ -1,29 +1,29 @@
-import * as React from 'react'
+import { Button } from '@mui/material'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import Typography from '@mui/material/Typography'
-import styles from './QuizQuestionCard.module.scss'
-import { GetQuizQuery } from '../generated/graphql'
 import TextField from '@mui/material/TextField'
-import { ALPHABET} from '../utils/constants'
-import { Action } from '../pages/createQuiz/index'
+import * as React from 'react'
+import { Action, Question } from '../pages/createQuiz/index'
+import styles from './QuizCreateQuestion.module.scss'
 
 const Question = ({
   questionNumber,
-  dispatch
+  dispatch,
+  initialValue,
 }: {
-  dispatch: (value: Action) => void,
+  dispatch: (value: Action) => void
   questionNumber: number
+  initialValue: Question
 }): JSX.Element => {
   return (
-    <Box sx={{ minWidth: 275, maxHeight: 100 }} key={questionNumber}>
+    <Box
+      sx={{ minWidth: 275, maxHeight: 300, paddingTop: 3 }}
+      key={questionNumber}
+    >
       <Card variant="outlined">
-        <CardContent
-          style={{ maxHeight: 400, overflow: 'auto' }}
-          className={styles.cardContent}
-        >
-          <div className={styles.question}>
+        <CardContent style={{ maxHeight: 400, overflow: 'auto' }}>
+          <div>
             <TextField
               onChange={(e) =>
                 dispatch({
@@ -34,31 +34,79 @@ const Question = ({
                   },
                 })
               }
-              label={`Question ${questionNumber}`}
-              variant="standard"
+              label={`Question ${questionNumber + 1}`}
+              variant="outlined"
+              sx={{ width: '50%' }}
+              value={initialValue ? initialValue.questionText : null}
             />
-          </div>
-          {[1, 1, 1, 1].map((optionTextRef, optionNumber) => (
-            <TextField
-              onChange={(e) =>
+            <Button
+              sx={{ float: 'right' }}
+              variant="contained"
+              color="secondary"
+              onClick={() =>
                 dispatch({
-                  type: 'edit-question-option-text',
-                  payload: {
-                    questionNumber,
-                    optionNumber,
-                    newOptionText: e.target.value,
-                  },
+                  type: 'remove-question',
+                  payload: { questionNumber },
                 })
               }
-              label={`Option ${ALPHABET[optionNumber]}`}
-              variant="standard"
-              key={optionNumber}
-            />
-          ))}
+            >
+              ➖ Question
+            </Button>
+            <Button
+              sx={{ float: 'right' }}
+              variant="contained"
+              color="secondary"
+              onClick={() =>
+                dispatch({
+                  type: 'remove-option',
+                  payload: { questionNumber },
+                })
+              }
+            >
+              ➖ option
+            </Button>
+            <Button
+              sx={{ float: 'right' }}
+              variant="contained"
+              color="secondary"
+              onClick={() =>
+                dispatch({
+                  type: 'add-option',
+                  payload: { questionNumber },
+                })
+              }
+            >
+              ➕ Option
+            </Button>
+          </div>
+          <div className={styles.optionsContainer}>
+            {initialValue.options.map((option, optionNumber) =>
+              <TextField
+                onChange={(e) =>
+                  dispatch({
+                    type: 'edit-question-option-text',
+                    payload: {
+                      questionNumber,
+                      optionNumber,
+                      newOptionText: e.target.value,
+                    },
+                  })
+                }
+                label={
+                  optionNumber === 0
+                    ? '✅ Correct Option'
+                    : '❌ Incorrect Option'
+                }
+                value={option}
+                variant="standard"
+                key={optionNumber}
+              />
+            )}
+          </div>
         </CardContent>
       </Card>
     </Box>
   )
 }
 
-export default Question;
+export default Question

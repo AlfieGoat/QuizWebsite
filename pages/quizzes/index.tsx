@@ -1,49 +1,24 @@
 import { Typography } from '@mui/material'
+import { print } from 'graphql'
+import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { ListQuizzesQuery } from '../../generated/graphql'
+import { ListQuizzesDocument, ListQuizzesQuery } from '../../generated/graphql'
 import NavBar from '../../sections/NavBar'
 import QuizSearchCard from '../../sections/QuizSearchCard'
 import QuizSearchPreview from '../../sections/QuizSearchPreview'
 import SearchBar from '../../sections/SearchBar'
-import { makeQuery } from '../../utils/fetch'
 import {
-  getTokenFromRequest,
-  authRedirectIfNeededOnServer,
-  logoutClient,
+  authRedirectIfNeededOnServer, getTokenFromRequest
 } from '../../utils/auth'
+import { makeQuery } from '../../utils/fetch'
 import styles from './index.module.scss'
-import { useRouter } from 'next/router'
 
 export async function getServerSideProps(context) {
-  const query = `query listQuizzes {
-    listQuizzes {
-      items {
-        createdAt
-        quizName
-        id
-        questions {
-          items {
-            questionNumber
-            possibleAnswers {
-              items {
-                answerText
-              }
-            }
-            question {
-              questionText
-            }
-          }
-        }
-      }
-    }
-  }`
-  console.log(context.req.headers)
   const redirect = authRedirectIfNeededOnServer(context)
   if (redirect) return redirect
   const auth = getTokenFromRequest(context)
   // const query: string = query;
-  const result = (await makeQuery(query, auth)).data.data as ListQuizzesQuery
-  // console.log(JSON.stringify(result))
+  const result = (await makeQuery(print(ListQuizzesDocument), auth)).data.data as ListQuizzesQuery
   return {
     props: { quizzes: result }, // will be passed to the page component as props
   }

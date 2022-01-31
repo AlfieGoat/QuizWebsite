@@ -1,16 +1,10 @@
 import { Button, Typography } from '@mui/material'
 import styles from './LandingHead.module.scss'
-import {
-  Circle,
-  Triangle,
-} from 'react-shapes'
+import { Circle, Triangle } from 'react-shapes'
+import Link from '@mui/material/Link'
+import { QUIZZES_LINK } from '../utils/constants'
 
-
-interface LandingHeadProps {
-  redirectToQuizzesFunc: () => void;
-}
-
-export const LandingHead = (props: LandingHeadProps): JSX.Element => {
+export const LandingHead = (): JSX.Element => {
   return (
     <div className={styles.background}>
       <div className={styles.container}>
@@ -44,7 +38,9 @@ export const LandingHead = (props: LandingHeadProps): JSX.Element => {
             Have a go!
           </Typography>
           <div className={styles.buttonContainer}>
-            <Button variant="contained" onClick={props.redirectToQuizzesFunc}>Take me to the Quizzes!</Button>
+            <Link href={QUIZZES_LINK} underline="none">
+              <Button variant="contained" size="large">Take me to the Quizzes!</Button>
+            </Link>
           </div>
         </div>
         <div className={styles.right}>

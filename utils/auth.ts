@@ -1,29 +1,44 @@
 import jwt_decode from 'jwt-decode'
 import { COGNITO_LOGIN_URL } from './constants'
 import { useEffect } from 'react'
-import { NextRouter, Router, useRouter } from 'next/router'
+import { NextRouter, useRouter } from 'next/router'
 import {
   checkCookies,
   getCookie,
   removeCookies,
   setCookies,
 } from 'cookies-next'
+import { AppContext } from 'next/app'
 
-export const getGroup = (context): string => {
+export const getGroupFromContext = (context: AppContext): string => {
   const authToken = getTokenFromRequest(context)
   const group = (jwt_decode(authToken) as any)['cognito:groups']
   if (group.length > 1) console.warn('User is part of more than 1 group')
   return group[0]
 }
 
-export const getTokenFromRequest = (context) => {
-  const cookie =
-    context.req.headers.cookie
-      ?.split(';')
-      .find((c) => c.trim().startsWith(`id_token=`)) ?? false
+export const getGroupFromClient = (): string => {
+  const authToken = getTokenFromClientCookies()
+  if (!authToken) return
+  const group = (jwt_decode(authToken) as any)['cognito:groups']
+  if (group.length > 1) console.warn('User is part of more than 1 group')
+  return group[0]
+}
+
+export const getTokenFromRequest = (context: AppContext) => {
+  const cookie = context.req.headers.cookie
+    ?.split(';')
+    .find((c) => c.trim().startsWith(`id_token=`))
 
   if (!cookie) return undefined
   return cookie.split('=')[1]
+}
+
+export const getTokenFromClientCookies = (): string | false => {
+  const token = getCookie('id_token') as string | null
+  if (!token) return false
+  if (isTokenExpired(token)) return false
+  return token
 }
 
 export const isTokenExpired = (authToken: string): boolean => {
@@ -35,7 +50,7 @@ export const isTokenExpired = (authToken: string): boolean => {
   )
 }
 
-export const isAuthdOnServer = (context) => {
+export const isAuthdOnServer = (context): boolean => {
   const authToken = getTokenFromRequest(context)
   if (!authToken) return false
   return !isTokenExpired(authToken)
@@ -70,7 +85,7 @@ interface Auth {
   expires_in: string
 }
 
-export const setAuthCookie = () => {
+export const setAuthCookie = (): void => {
   const router = useRouter()
 
   useEffect(() => {
@@ -84,9 +99,8 @@ export const setAuthCookie = () => {
       ) as Auth
       setCookies('id_token', id_token)
       setCookies('access_token', access_token)
-      console.log(jwt_decode(id_token))
       router.push('/')
-} catch {
+    } catch {
       console.log('No token to set')
     }
   }, [router.isReady])

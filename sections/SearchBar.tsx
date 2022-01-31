@@ -10,7 +10,7 @@ interface SearchBarProps {
   setSearchText: (searchText: string) => void;
 }
 
-export default function InputAdornments(props: SearchBarProps) {
+export default function InputAdornments(props: SearchBarProps): JSX.Element {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     props.setSearchText(event.target.value);
   };

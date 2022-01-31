@@ -15,31 +15,24 @@ interface QuestionProps {
   correctAnswerId?: string
 }
 
-interface QuestionOptionProps {
-  index: number
-  optionText: string
-  correctAnswerId?: string
-  optionId: string
-}
-
-const QuestionOption = (props: QuestionOptionProps): JSX.Element => {
-  return (
-    <div className={props.correctAnswerId === props.optionId ? styles.correctOption : null}>
-      {ALPHABET[props.index]}. {props.optionText}
-      <br />
-    </div>
-  )
-}
-
 const Question = (props: QuestionProps): JSX.Element => {
   return (
-    <>
-      <Typography paddingLeft={1.5} variant="subtitle1">
-        {props.questionOptions.map((option, i) => (
-          <QuestionOption index={i} optionText={option.optionText} optionId={option.optionId} correctAnswerId={props.correctAnswerId} key={i} />
-        ))}
-      </Typography>
-    </>
+    <Box sx={{ minWidth: 275, maxHeight: 300, paddingTop: 3 }} key={props.questionNumber}>
+      <Card variant="outlined">
+        <CardContent
+          style={{ maxHeight: 400, overflow: 'auto' }}
+        >
+          <div className={styles.questionCardHeader}>
+            <Typography variant='h6'>{props.questionText}</Typography>
+          </div>
+          <div className={styles.optionsContainer}>
+          {props.questionOptions.map((questionOption, optionNumber) => (
+            <Typography className={props.correctAnswerId === questionOption.optionId ? styles.correctOption : null} key={optionNumber}>{ALPHABET[optionNumber]}) {questionOption.optionText}</Typography>
+          ))}
+          </div>
+        </CardContent>
+      </Card>
+    </Box>
   )
 }
 
@@ -50,31 +43,14 @@ interface QuizQuestionCardProps {
 
 const QuizQuestionCard = (props: QuizQuestionCardProps): JSX.Element => {
   return (
-    <Box sx={{ minWidth: 275, maxHeight: 100 }}>
-      <Card variant="outlined">
-        {' '}
-        <CardContent
-          style={{ maxHeight: 400, overflow: 'auto' }}
-          className={styles.cardContent}
-        >
-          <div className={styles.question}>
-            <Typography variant="h5" component="div">
-              {props.question.question.questionText}
-            </Typography>
-          </div>
-          <Question
-            questionNumber={props.question.questionNumber}
-            questionText={props.question.question.questionText}
-            questionOptions={props.question.possibleAnswers.items.map(
-              (item) => {
-                return { optionText: item.answerText, optionId: item.id }
-              }
-            )}
-            correctAnswerId={props.correctAnswerId}
-          />
-        </CardContent>
-      </Card>
-    </Box>
+    <Question
+      questionNumber={props.question.questionNumber}
+      questionText={props.question.question.questionText}
+      questionOptions={props.question.possibleAnswers.items.map((item) => {
+        return { optionText: item.answerText, optionId: item.id }
+      })}
+      correctAnswerId={props.correctAnswerId}
+    />
   )
 }
 

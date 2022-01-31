@@ -1,0 +1,5 @@
+mutation CreateQuizWithId($quizName: String!, $quizId: ID!) {
+  createQuiz(input: {quizName: $quizName, id: $quizId}) {
+    id
+  }
+}

@@ -1,14 +1,8 @@
-import { LandingHead } from '../sections/index/LandingHead'
-import { useRouter } from 'next/router'
+import { LandingHead } from '../sections/LandingHead'
 
 export const Home = (): JSX.Element => {
-  const router = useRouter()
-  const redirectToQuizzes = (): void => {
-      if (!router.isReady) return
-        router.push("quizzes")
-  }
   return (
-      <LandingHead redirectToQuizzesFunc={redirectToQuizzes}/>
+      <LandingHead/>
   )
 }
 

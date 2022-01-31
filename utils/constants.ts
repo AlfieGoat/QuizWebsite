@@ -10,3 +10,5 @@ export enum COGNITO_GROUPS {
 }
 
 export const ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
+export const QUIZZES_LINK = '/quizzes'
+export const CREATE_QUIZ_LINK = '/createQuiz'

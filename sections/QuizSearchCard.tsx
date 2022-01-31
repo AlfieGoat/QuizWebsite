@@ -6,6 +6,7 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import styles from './QuizSearchCard.module.scss'
 import { ListQuizzesQuery } from '../generated/graphql'
+import { getHumanReadableDate } from '../utils/getHumanReadableDate'
 
 const bull = (
   <Box
@@ -43,7 +44,7 @@ export default function QuizSearchCard(
             {bull}
           </Typography>
           <Typography variant="body2">
-            Created at: {props.creationDate}
+            Created: {getHumanReadableDate(props.creationDate)}
           </Typography>
         </CardContent>
       </Card>

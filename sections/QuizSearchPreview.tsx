@@ -6,9 +6,10 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import styles from './QuizSearchPreview.module.scss'
 import { ListQuizzesQuery } from '../generated/graphql'
-import { openQuiz } from '../utils/openQuiz'
 import { NextRouter } from 'next/router'
-import { ALPHABET} from '../utils/constants'
+import { ALPHABET } from '../utils/constants'
+import { getQuizUrl } from '../utils/getUrls'
+import Link from '@mui/material/Link'
 
 const bull = (
   <Box
@@ -26,14 +27,17 @@ interface QuestionProps {
 }
 
 interface QuestionOptionProps {
-  index: number;
-  optionText: string;
+  index: number
+  optionText: string
 }
 
 const QuestionOption = (props: QuestionOptionProps): JSX.Element => {
-  return (          <>
-    {ALPHABET[props.index]}. {props.optionText}<br/>
-  </>)
+  return (
+    <>
+      {ALPHABET[props.index].toUpperCase()}. {props.optionText}
+      <br />
+    </>
+  )
 }
 
 const Question = (props: QuestionProps): JSX.Element => {
@@ -44,7 +48,7 @@ const Question = (props: QuestionProps): JSX.Element => {
       </Typography>
       <Typography paddingLeft={1.5} variant="body2">
         {props.questionOptions.map((option, i) => (
-          <QuestionOption index={i} optionText={option} key={i}/>
+          <QuestionOption index={i} optionText={option} key={i} />
         ))}
       </Typography>
     </>
@@ -52,8 +56,8 @@ const Question = (props: QuestionProps): JSX.Element => {
 }
 
 interface QuizSearchPreviewProps {
-  quiz: ListQuizzesQuery['listQuizzes']['items'][0];
-  router: NextRouter;
+  quiz: ListQuizzesQuery['listQuizzes']['items'][0]
+  router: NextRouter
 }
 
 const QuizSearchPreview = (props: QuizSearchPreviewProps): JSX.Element => {
@@ -67,7 +71,9 @@ const QuizSearchPreview = (props: QuizSearchPreviewProps): JSX.Element => {
               {props.quiz.quizName}
             </Typography>
             <div className={styles.button}>
-              <Button size="small" onClick={() => openQuiz(props.quiz.id, props.router)}>Open Quiz</Button>
+              <Link href={getQuizUrl(props.quiz.id)} underline="none">
+                <Button size="small">Open Quiz</Button>
+              </Link>
             </div>
           </div>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
@@ -77,7 +83,9 @@ const QuizSearchPreview = (props: QuizSearchPreviewProps): JSX.Element => {
             <Question
               questionNumber={question.questionNumber}
               questionText={question.question.questionText}
-              questionOptions={question.possibleAnswers.items.map(item => item.answerText)}
+              questionOptions={question.possibleAnswers.items.map(
+                (item) => item.answerText
+              )}
               key={i}
             />
           ))}

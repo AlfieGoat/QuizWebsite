@@ -5,7 +5,6 @@ interface LayoutProps {
  }
 
 export const Layout = ({children}: LayoutProps): JSX.Element => {
-    
   return (
     <div className={styles.layout}>{children}</div>
   )
