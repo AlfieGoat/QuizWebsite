@@ -23,14 +23,15 @@ import {
 import { Question, reducer } from '../createQuiz/index'
 import styles from './[id].module.scss'
 import { GetQuizWithCorrectAnswerDocument} from "../../generated/graphql"
+import { GetServerSideProps } from 'next'
 
-export async function getServerSideProps(context) {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const redirect = authRedirectIfNeededOnServer(context)
   if (redirect) return redirect
 
   const group = getGroupFromContext(context)
   const auth = getTokenFromRequest(context)
-  const result = (await makeQuery(print(GetQuizWithCorrectAnswerDocument), auth, { id: context.params.id })).data
+  const result = (await makeQuery(print(GetQuizWithCorrectAnswerDocument), auth, { id: context.params.id as string })).data
     .data as GetQuizWithCorrectAnswerQuery
   return {
     props: { quiz: result, group }, // will be passed to the page component as props

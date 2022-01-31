@@ -1,25 +1,22 @@
-import { Typography, Button, Link } from '@mui/material'
+import { Button, Link, Typography } from '@mui/material'
+import { print } from 'graphql'
+import { GetServerSideProps } from 'next'
+import { NextRouter, useRouter } from 'next/router'
 import React from 'react'
-import {
-  GetQuizQuery,
-  GetQuizWithCorrectAnswerQuery,GetQuizDocument, GetQuizWithCorrectAnswerDocument
-} from '../../generated/graphql'
+import { GetQuizDocument, GetQuizQuery, GetQuizWithCorrectAnswerDocument, GetQuizWithCorrectAnswerQuery } from '../../generated/graphql'
 import NavBar from '../../sections/NavBar'
 import QuizQuestionCard from '../../sections/QuizQuestionCard'
-import { makeQuery } from '../../utils/fetch'
 import {
-  getTokenFromRequest,
   authRedirectIfNeededOnServer,
-  getGroupFromContext,
+  getGroupFromContext, getTokenFromRequest
 } from '../../utils/auth'
-import styles from './[id].module.scss'
 import { COGNITO_GROUPS } from '../../utils/constants'
-import { NextRouter, useRouter } from 'next/router'
+import { makeQuery } from '../../utils/fetch'
 import { getHumanReadableDate } from '../../utils/getHumanReadableDate'
 import { getEditQuizUrl } from '../../utils/getUrls'
-import { print } from 'graphql'
+import styles from './[id].module.scss'
 
-export async function getServerSideProps(context) {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const redirect = authRedirectIfNeededOnServer(context)
   if (redirect) return redirect
 
@@ -30,7 +27,7 @@ export async function getServerSideProps(context) {
   else if (group === COGNITO_GROUPS.USER) query = print(GetQuizDocument)
 
   const auth = getTokenFromRequest(context)
-  const result = (await makeQuery(query, auth, { id: context.params.id })).data
+  const result = (await makeQuery(query, auth, { id: context.params.id as string})).data
     .data as GetQuizQuery | GetQuizWithCorrectAnswerQuery
   return {
     props: { quiz: result, group }, // will be passed to the page component as props

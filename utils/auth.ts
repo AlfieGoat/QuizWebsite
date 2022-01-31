@@ -9,8 +9,9 @@ import {
   setCookies,
 } from 'cookies-next'
 import { AppContext } from 'next/app'
+import { GetServerSidePropsContext } from 'next'
 
-export const getGroupFromContext = (context: AppContext): string => {
+export const getGroupFromContext = (context: GetServerSidePropsContext): string => {
   const authToken = getTokenFromRequest(context)
   const group = (jwt_decode(authToken) as any)['cognito:groups']
   if (group.length > 1) console.warn('User is part of more than 1 group')
@@ -25,7 +26,7 @@ export const getGroupFromClient = (): string => {
   return group[0]
 }
 
-export const getTokenFromRequest = (context: AppContext) => {
+export const getTokenFromRequest = (context: GetServerSidePropsContext) => {
   const cookie = context.req.headers.cookie
     ?.split(';')
     .find((c) => c.trim().startsWith(`id_token=`))
@@ -50,13 +51,13 @@ export const isTokenExpired = (authToken: string): boolean => {
   )
 }
 
-export const isAuthdOnServer = (context): boolean => {
+export const isAuthdOnServer = (context: GetServerSidePropsContext): boolean => {
   const authToken = getTokenFromRequest(context)
   if (!authToken) return false
   return !isTokenExpired(authToken)
 }
 
-export const authRedirectIfNeededOnServer = (context) => {
+export const authRedirectIfNeededOnServer = (context: GetServerSidePropsContext) => {
   if (!isAuthdOnServer(context)) {
     return {
       redirect: {

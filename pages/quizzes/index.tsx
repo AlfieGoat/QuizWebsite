@@ -1,5 +1,6 @@
 import { Typography } from '@mui/material'
 import { print } from 'graphql'
+import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { ListQuizzesDocument, ListQuizzesQuery } from '../../generated/graphql'
@@ -13,7 +14,7 @@ import {
 import { makeQuery } from '../../utils/fetch'
 import styles from './index.module.scss'
 
-export async function getServerSideProps(context) {
+export const getServerSideProps:GetServerSideProps = async (context) => {
   const redirect = authRedirectIfNeededOnServer(context)
   if (redirect) return redirect
   const auth = getTokenFromRequest(context)
