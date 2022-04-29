@@ -30,12 +30,11 @@ export const createQuizWithQuestions = async (
   questions: Question[],
   quizName: string,
   quizId?: string
-): Promise<void> => {
+): Promise<string> => {
   const createQuizResult = quizId
     ? await createQuizWithId({ quizId, quizName })
     : await createQuiz({ quizName })
-  if (!createQuizResult)
-  questions.map((question, questionNumber) => {
+  await Promise.all(questions.map((question, questionNumber) => {
     createQuestion({
       numberOfOptions: question.options.length,
       queryVariables: {
@@ -49,7 +48,8 @@ export const createQuizWithQuestions = async (
         answerText5: question.options[4],
       },
     })
-  })
+  }))
+  return createQuizResult.createQuiz.id
 }
 
 export const createQuiz = async (

@@ -1,20 +1,67 @@
-mutation CreateQuestion3($quizId: ID!, $questionNumber: Int!, $questionContainerId: ID!, $questionText: String!, $questionId: ID!, $correctAnswerId: ID!, $answerText1: String!, $answerId1: ID!, $answerText2: String!, $answerId2: ID!, $answerText3: String!, $answerId3: ID!) {
-  createQuestionContainer(input: {questionContainerCorrectAnswerId: $correctAnswerId, questionContainerQuestionId: $questionId, questionNumber: $questionNumber, quizID: $quizId, id: $questionContainerId}) {
+mutation CreateQuestion3(
+  $quizId: ID!
+  $questionNumber: Int!
+  $questionContainerId: ID!
+  $questionText: String!
+  $questionId: ID!
+  $correctAnswerId: ID!
+  $answerText1: String!
+  $answerId1: ID!
+  $answerText2: String!
+  $answerId2: ID!
+  $answerText3: String!
+  $answerId3: ID!
+) {
+  createQuestionContainer(
+    input: {
+      questionContainerCorrectAnswerId: $correctAnswerId
+      questionContainerQuestionId: $questionId
+      questionNumber: $questionNumber
+      quizID: $quizId
+      id: $questionContainerId
+    }
+  ) {
     id
   }
-  createQuestion(input: {questionText: $questionText, questionContainerId: $questionContainerId, id: $questionId}) {
+  createQuestion(
+    input: {
+      questionText: $questionText
+      questionContainerId: $questionContainerId
+      id: $questionId
+    }
+  ) {
     id
   }
-  createCorrectAnswer(input: {correctAnswerAnswerId: $answerId1, id: $correctAnswerId}) {
+  createCorrectAnswer(
+    input: { correctAnswerAnswerId: $answerId1, id: $correctAnswerId }
+  ) {
     id
   }
-  Answer1: createAnswer(input: {questionContainerId: $questionContainerId, answerText: $answerText1, id: $answerId1}) {
+  Answer1: createAnswer(
+    input: {
+      questionContainerId: $questionContainerId
+      answerText: $answerText1
+      id: $answerId1
+    }
+  ) {
     id
   }
-  Answer2: createAnswer(input: {questionContainerId: $questionContainerId, answerText: $answerText2, id: $answerId2}) {
+  Answer2: createAnswer(
+    input: {
+      questionContainerId: $questionContainerId
+      answerText: $answerText2
+      id: $answerId2
+    }
+  ) {
     id
   }
-  Answer3: createAnswer(input: {questionContainerId: $questionContainerId, answerText: $answerText3, id: $answerId3}) {
+  Answer3: createAnswer(
+    input: {
+      questionContainerId: $questionContainerId
+      answerText: $answerText3
+      id: $answerId3
+    }
+  ) {
     id
   }
 }

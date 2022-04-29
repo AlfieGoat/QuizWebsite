@@ -1,13 +1,12 @@
 overwrite: true
-schema: "graphql/schema.graphql"
-documents: "graphql/*"
+schema: 'graphql/schema.graphql'
+documents: 'graphql/*'
 generates:
   generated/graphql.tsx:
     plugins:
-      - "typescript"
-      - "typescript-operations"
-      - "typescript-react-apollo"
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-react-apollo'
   ./graphql.schema.json:
     plugins:
-      - "@graphql-codegen/typescript"
-      
+      - '@graphql-codegen/typescript'

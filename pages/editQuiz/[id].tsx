@@ -4,26 +4,29 @@ import { NextRouter, useRouter } from 'next/router'
 import React, { useReducer } from 'react'
 import {
   GetQuizQuery,
-  GetQuizWithCorrectAnswerQuery
+  GetQuizWithCorrectAnswerQuery,
 } from '../../generated/graphql'
 import NavBar from '../../sections/NavBar'
 import QuestionCard from '../../sections/QuizCreateQuestion'
 import QuizQuestionCard from '../../sections/QuizQuestionCard'
 import {
   authRedirectIfNeededOnServer,
-  getGroupFromContext, getTokenFromRequest
+  getGroupFromContext,
+  getTokenFromRequest,
 } from '../../utils/auth'
 import { COGNITO_GROUPS, QUIZZES_LINK } from '../../utils/constants'
 import { makeQuery } from '../../utils/fetch'
 import {
   createQuizWithQuestions,
   deleteQuestionContainer,
-  deleteQuiz
+  deleteQuiz,
 } from '../../utils/graphQlMutations'
 import { Question, reducer } from '../createQuiz/index'
 import styles from './[id].module.scss'
-import { GetQuizWithCorrectAnswerDocument} from "../../generated/graphql"
+import { GetQuizWithCorrectAnswerDocument } from '../../generated/graphql'
 import { GetServerSideProps } from 'next'
+import { getQuizUrl } from '../../utils/getUrls'
+import { delay } from '../../utils/delay'
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const redirect = authRedirectIfNeededOnServer(context)
@@ -31,8 +34,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const group = getGroupFromContext(context)
   const auth = getTokenFromRequest(context)
-  const result = (await makeQuery(print(GetQuizWithCorrectAnswerDocument), auth, { id: context.params.id as string })).data
-    .data as GetQuizWithCorrectAnswerQuery
+  const result = (
+    await makeQuery(print(GetQuizWithCorrectAnswerDocument), auth, {
+      id: context.params.id as string,
+    })
+  ).data.data as GetQuizWithCorrectAnswerQuery
   return {
     props: { quiz: result, group }, // will be passed to the page component as props
   }
@@ -51,7 +57,7 @@ const sendEdits = async (
         await deleteQuestionContainer({ id: questionContainerId })
     )
   )
-  await createQuizWithQuestions(questions, quizName, quizId)
+  return await createQuizWithQuestions(questions, quizName, quizId)
 }
 
 interface QuizzesProps {
@@ -117,13 +123,14 @@ const CommonQuiz = ({
               variant="contained"
               color="secondary"
               onClick={async () => {
-                await sendEdits(
+                const quizId = await sendEdits(
                   quiz.getQuiz.id,
                   quizName,
                   questions,
                   quiz.getQuiz.questions.items.map((question) => question.id)
                 )
-                await router.push(QUIZZES_LINK)
+                await delay(800);
+                await router.push(getQuizUrl(quizId))
               }}
             >
               Finalize Edits

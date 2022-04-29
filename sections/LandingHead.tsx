@@ -39,7 +39,9 @@ export const LandingHead = (): JSX.Element => {
           </Typography>
           <div className={styles.buttonContainer}>
             <Link href={QUIZZES_LINK} underline="none">
-              <Button variant="contained" size="large">Take me to the Quizzes!</Button>
+              <Button variant="contained" size="large">
+                Take me to the Quizzes!
+              </Button>
             </Link>
           </div>
         </div>

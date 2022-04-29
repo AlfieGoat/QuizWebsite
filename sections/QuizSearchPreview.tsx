@@ -79,16 +79,21 @@ const QuizSearchPreview = (props: QuizSearchPreviewProps): JSX.Element => {
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             QuizPoint1 {bull} QuizPoint2
           </Typography>
-          {props.quiz.questions.items.map((question, i) => (
-            <Question
-              questionNumber={question.questionNumber}
-              questionText={question.question.questionText}
-              questionOptions={question.possibleAnswers.items.map(
-                (item) => item.answerText
-              )}
-              key={i}
-            />
-          ))}
+          {props.quiz.questions.items
+            .sort(
+              (questionA, questionB) =>
+                questionA.questionNumber - questionB.questionNumber
+            )
+            .map((question, i) => (
+              <Question
+                questionNumber={question.questionNumber}
+                questionText={question.question.questionText}
+                questionOptions={question.possibleAnswers.items.map(
+                  (item) => item.answerText
+                )}
+                key={i}
+              />
+            ))}
         </CardContent>
       </Card>
     </Box>

@@ -1,5 +1,5 @@
 .background {
-  background-color: #1A2133;
+  background-color: #1a2133;
   width: 100%;
   height: 600px;
 }
@@ -25,32 +25,32 @@
   padding-bottom: 5rem;
 }
 
-.bottomText{
-    padding-top: 4rem;
+.bottomText {
+  padding-top: 4rem;
 }
 
 .buttonContainer {
-    padding-top: 1rem;
+  padding-top: 1rem;
 }
 
 .circle {
-    margin: auto;
-    width: 50%;
+  margin: auto;
+  width: 50%;
 }
 
 .triangle {
-    position: absolute;
-    z-index: 100;
-    margin: auto;
-    width: 50%;
+  position: absolute;
+  z-index: 100;
+  margin: auto;
+  width: 50%;
 }
 
 .triangle1 {
-    @extend .triangle;
-    transform: translate(230px, -420px);
+  @extend .triangle;
+  transform: translate(230px, -420px);
 }
 
 .triangle2 {
-    @extend .triangle;
-    transform: translate(50px, -100px);
+  @extend .triangle;
+  transform: translate(50px, -100px);
 }

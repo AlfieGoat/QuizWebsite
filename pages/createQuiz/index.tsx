@@ -5,7 +5,8 @@ import React, { useReducer } from 'react'
 import { ListQuizzesQuery } from '../../generated/graphql'
 import NavBar from '../../sections/NavBar'
 import Question from '../../sections/QuizCreateQuestion'
-import { QUIZZES_LINK } from '../../utils/constants'
+import { delay } from '../../utils/delay'
+import { getQuizUrl } from '../../utils/getUrls'
 import { createQuizWithQuestions } from '../../utils/graphQlMutations'
 import styles from './index.module.scss'
 
@@ -111,27 +112,29 @@ export function reducer(state: State, action: Action): State {
         ...state,
         questions: state.questions.map((question, questionNumber) => {
           if (questionNumber === action.payload.questionNumber) {
-            if (question.options.length >= 5)
-              return question
+            if (question.options.length >= 5) return question
             return {
               ...question,
               options: [...question.options, ''],
             }
-          } return question
+          }
+          return question
         }),
       }
-      case 'remove-option':
+    case 'remove-option':
       return {
         ...state,
         questions: state.questions.map((question, questionNumber) => {
           if (questionNumber === action.payload.questionNumber) {
-            if (question.options.length <= 3)
-              return question
+            if (question.options.length <= 3) return question
             return {
               ...question,
-              options: [...question.options.slice(0, question.options.length-1)],
+              options: [
+                ...question.options.slice(0, question.options.length - 1),
+              ],
             }
-          } return question
+          }
+          return question
         }),
       }
     default:
@@ -171,8 +174,9 @@ const CreateQuiz = (props: QuizzesProps): JSX.Element => {
               variant="contained"
               color="secondary"
               onClick={async () => {
-                await createQuizWithQuestions(questions, quizName)
-                await router.push(QUIZZES_LINK)
+                const quizId = await createQuizWithQuestions(questions, quizName)
+                await delay(800);
+                await router.push(getQuizUrl(quizId))
               }}
             >
               Create Quiz

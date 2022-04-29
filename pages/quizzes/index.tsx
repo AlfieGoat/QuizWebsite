@@ -9,17 +9,18 @@ import QuizSearchCard from '../../sections/QuizSearchCard'
 import QuizSearchPreview from '../../sections/QuizSearchPreview'
 import SearchBar from '../../sections/SearchBar'
 import {
-  authRedirectIfNeededOnServer, getTokenFromRequest
+  authRedirectIfNeededOnServer,
+  getTokenFromRequest,
 } from '../../utils/auth'
 import { makeQuery } from '../../utils/fetch'
 import styles from './index.module.scss'
 
-export const getServerSideProps:GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const redirect = authRedirectIfNeededOnServer(context)
   if (redirect) return redirect
   const auth = getTokenFromRequest(context)
-  // const query: string = query;
-  const result = (await makeQuery(print(ListQuizzesDocument), auth)).data.data as ListQuizzesQuery
+  const result = (await makeQuery(print(ListQuizzesDocument), auth)).data
+    .data as ListQuizzesQuery
   return {
     props: { quizzes: result }, // will be passed to the page component as props
   }
@@ -36,10 +37,10 @@ const Quizzes = (props: QuizzesProps): JSX.Element => {
     props.quizzes.listQuizzes.items[0]
   )
   const [searchText, setSearchText] = useState('')
-  const router = useRouter(); 
+  const router = useRouter()
   return (
     <>
-      <NavBar router={router}/>
+      <NavBar router={router} />
       <div className={styles.contentContainer}>
         <div className={styles.searchBar}>
           <SearchBar searchText={searchText} setSearchText={setSearchText} />
@@ -69,7 +70,9 @@ const Quizzes = (props: QuizzesProps): JSX.Element => {
               })}
           </div>
           <div className={styles.quizSearchPreview}>
-            <QuizSearchPreview quiz={previewQuiz} router={router}/>
+            {previewQuiz && (
+              <QuizSearchPreview quiz={previewQuiz} router={router} />
+            )}
           </div>
         </div>
       </div>

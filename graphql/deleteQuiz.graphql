@@ -1,5 +1,5 @@
 mutation DeleteQuiz($id: ID!) {
-  deleteQuiz(input: {id: $id}) {
+  deleteQuiz(input: { id: $id }) {
     id
   }
 }

@@ -1,5 +1,5 @@
 mutation CreateQuiz($quizName: String!) {
-  createQuiz(input: {quizName: $quizName}) {
+  createQuiz(input: { quizName: $quizName }) {
     id
   }
 }

@@ -1,19 +1,15 @@
+import { getCookie, removeCookies, setCookies } from 'cookies-next'
 import jwt_decode from 'jwt-decode'
-import { COGNITO_LOGIN_URL } from './constants'
-import { useEffect } from 'react'
-import { NextRouter, useRouter } from 'next/router'
-import {
-  checkCookies,
-  getCookie,
-  removeCookies,
-  setCookies,
-} from 'cookies-next'
-import { AppContext } from 'next/app'
 import { GetServerSidePropsContext } from 'next'
+import { NextRouter, useRouter } from 'next/router'
+import { useEffect } from 'react'
+import { COGNITO_LOGIN_URL } from './constants'
 
-export const getGroupFromContext = (context: GetServerSidePropsContext): string => {
+export const getGroupFromContext = (
+  context: GetServerSidePropsContext
+): string => {
   const authToken = getTokenFromRequest(context)
-  const group = (jwt_decode(authToken) as any)['cognito:groups']
+  const group = jwt_decode(authToken)['cognito:groups']
   if (group.length > 1) console.warn('User is part of more than 1 group')
   return group[0]
 }
@@ -26,7 +22,9 @@ export const getGroupFromClient = (): string => {
   return group[0]
 }
 
-export const getTokenFromRequest = (context: GetServerSidePropsContext) => {
+export const getTokenFromRequest = (
+  context: GetServerSidePropsContext
+): string | undefined => {
   const cookie = context.req.headers.cookie
     ?.split(';')
     .find((c) => c.trim().startsWith(`id_token=`))
@@ -51,13 +49,17 @@ export const isTokenExpired = (authToken: string): boolean => {
   )
 }
 
-export const isAuthdOnServer = (context: GetServerSidePropsContext): boolean => {
+export const isAuthdOnServer = (
+  context: GetServerSidePropsContext
+): boolean => {
   const authToken = getTokenFromRequest(context)
   if (!authToken) return false
   return !isTokenExpired(authToken)
 }
 
-export const authRedirectIfNeededOnServer = (context: GetServerSidePropsContext) => {
+export const authRedirectIfNeededOnServer = (
+  context: GetServerSidePropsContext
+) => {
   if (!isAuthdOnServer(context)) {
     return {
       redirect: {
@@ -73,10 +75,12 @@ export const authRedirectIfNeededOnClient = (): void => {
   const router = useRouter()
   useEffect(() => {
     if (!router.isReady) return
-    if (!checkCookies('id_token', { maxAge: 3600 }))
+    try {
+      if (isTokenExpired(getCookie('id_token') as string))
+        router.push(COGNITO_LOGIN_URL)
+    } catch {
       router.push(COGNITO_LOGIN_URL)
-    if (isTokenExpired(getCookie('id_token') as string))
-      router.push(COGNITO_LOGIN_URL)
+    }
   }, [router.isReady])
 }
 

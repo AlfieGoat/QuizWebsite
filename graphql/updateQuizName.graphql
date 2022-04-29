@@ -1,5 +1,5 @@
 mutation UpdateQuizName($quizId: ID!, $newQuizName: String!) {
-  updateQuiz(input: {id: $quizId, quizName: $newQuizName}) {
+  updateQuiz(input: { id: $quizId, quizName: $newQuizName }) {
     id
   }
 }

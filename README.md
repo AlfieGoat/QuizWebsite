@@ -1,33 +1,20 @@
-# NextJS Typescript Boilerplate
+# NextJS Quiz Website 
 
-Bootstrap a developer-friendly NextJS app configured with:
+## Use deployed version
+If you want to use the site, but not deploy it yourself, you can visit https://quiz.aggoatch.people.amazon.dev/.
 
-- [Typescript](https://www.typescriptlang.org/)
-- Linting with [ESLint](https://eslint.org/)
-- Formatting with [Prettier](https://prettier.io/)
-- Linting, typechecking and formatting on by default using [`husky`](https://github.com/typicode/husky) for commit hooks
-- Testing with [Jest](https://jestjs.io/) and [`react-testing-library`](https://testing-library.com/docs/react-testing-library/intro)
+### Users
+There are three different access level accounts: `alfieadmin`, `alfiemoderator`, `alfieuser`
+The password for all three accounts is `Password-1`
 
-## Preview
+### instructions to run locally 
 
-Preview the example live on [StackBlitz](http://stackblitz.com/):
+1. `npm i`
+2. `npm run dev`
+3. You will need access to a deployed backend, to do that you will need auth. go to your deployed site and sign in using a known account.
+4. Using developer tools, extract the query args which include the JWT token, e.g `#id_token=eyJraWQiOiJPT...jbk8X4Z3y7PA&expires_in=3600&token_type=Bearer`
+5. go to `localhost:3000/#id_token=...` with the token you just extracted in the URL
+You should be able to use the local dev server as if it was hosted in the lambda at edge!
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/vercel/next.js/tree/canary/examples/with-typescript-eslint-jest)
-
-## Deploy your own
-
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example):
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-typescript-eslint-jest&project-name=with-typescript-eslint-jest&repository-name=with-typescript-eslint-jest)
-
-## How to use
-
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init) or [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) to bootstrap the example:
-
-```bash
-npx create-next-app --example with-typescript-eslint-jest with-typescript-eslint-jest-app
-# or
-yarn create next-app --example with-typescript-eslint-jest with-typescript-eslint-jest-app
-```
-
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+### To build
+`npm run build` bundles the assets so they can be deployed by the [serverless NextJS CDK construct](https://github.com/serverless-nextjs/serverless-next.js/)

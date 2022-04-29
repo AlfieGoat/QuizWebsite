@@ -17,18 +17,28 @@ interface QuestionProps {
 
 const Question = (props: QuestionProps): JSX.Element => {
   return (
-    <Box sx={{ minWidth: 275, maxHeight: 300, paddingTop: 3 }} key={props.questionNumber}>
+    <Box
+      sx={{ minWidth: 275, maxHeight: 300, paddingTop: 3 }}
+      key={props.questionNumber}
+    >
       <Card variant="outlined">
-        <CardContent
-          style={{ maxHeight: 400, overflow: 'auto' }}
-        >
+        <CardContent style={{ maxHeight: 400, overflow: 'auto' }}>
           <div className={styles.questionCardHeader}>
-            <Typography variant='h6'>{props.questionText}</Typography>
+            <Typography variant="h6">{`${props.questionNumber}) ${props.questionText}`}</Typography>
           </div>
           <div className={styles.optionsContainer}>
-          {props.questionOptions.map((questionOption, optionNumber) => (
-            <Typography className={props.correctAnswerId === questionOption.optionId ? styles.correctOption : null} key={optionNumber}>{ALPHABET[optionNumber]}) {questionOption.optionText}</Typography>
-          ))}
+            {props.questionOptions.map((questionOption, optionNumber) => (
+              <Typography
+                className={
+                  props.correctAnswerId === questionOption.optionId
+                    ? styles.correctOption
+                    : null
+                }
+                key={optionNumber}
+              >
+                {ALPHABET[optionNumber]}) {questionOption.optionText}
+              </Typography>
+            ))}
           </div>
         </CardContent>
       </Card>

@@ -18,10 +18,10 @@ const bull = (
 )
 
 interface QuizSearchCardProps {
-  quizTitle: string;
-  creationDate: string;
-  quiz: ListQuizzesQuery['listQuizzes']['items'][0];
-  setPreviewQuiz: (quiz: ListQuizzesQuery['listQuizzes']['items'][0]) => void;
+  quizTitle: string
+  creationDate: string
+  quiz: ListQuizzesQuery['listQuizzes']['items'][0]
+  setPreviewQuiz: (quiz: ListQuizzesQuery['listQuizzes']['items'][0]) => void
 }
 
 export default function QuizSearchCard(
@@ -37,7 +37,9 @@ export default function QuizSearchCard(
               {props.quizTitle}
             </Typography>
             <div className={styles.button}>
-              <Button size="small" onClick={setPreviewQuiz}>Preview</Button>
+              <Button size="small" onClick={setPreviewQuiz}>
+                Preview
+              </Button>
             </div>
           </div>
           <Typography sx={{ mb: 1.5, fontSize: 11 }} color="text.secondary">

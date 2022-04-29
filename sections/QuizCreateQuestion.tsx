@@ -80,7 +80,7 @@ const Question = ({
             </Button>
           </div>
           <div className={styles.optionsContainer}>
-            {initialValue.options.map((option, optionNumber) =>
+            {initialValue.options.map((option, optionNumber) => (
               <TextField
                 onChange={(e) =>
                   dispatch({
@@ -101,7 +101,7 @@ const Question = ({
                 variant="standard"
                 key={optionNumber}
               />
-            )}
+            ))}
           </div>
         </CardContent>
       </Card>

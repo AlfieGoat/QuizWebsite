@@ -48,17 +48,23 @@ type Mutation {
   createAnswer(input: CreateAnswerInput!): Answer
   createCorrectAnswer(input: CreateCorrectAnswerInput!): CorrectAnswer
   createQuestion(input: CreateQuestionInput!): Question
-  createQuestionContainer(input: CreateQuestionContainerInput!): QuestionContainer
+  createQuestionContainer(
+    input: CreateQuestionContainerInput!
+  ): QuestionContainer
   createQuiz(input: CreateQuizInput!): Quiz
   deleteAnswer(input: DeleteAnswerInput!): Answer
   deleteCorrectAnswer(input: DeleteCorrectAnswerInput!): CorrectAnswer
   deleteQuestion(input: DeleteQuestionInput!): Question
-  deleteQuestionContainer(input: DeleteQuestionContainerInput!): QuestionContainer
+  deleteQuestionContainer(
+    input: DeleteQuestionContainerInput!
+  ): QuestionContainer
   deleteQuiz(input: DeleteQuizInput!): Quiz
   updateAnswer(input: UpdateAnswerInput!): Answer
   updateCorrectAnswer(input: UpdateCorrectAnswerInput!): CorrectAnswer
   updateQuestion(input: UpdateQuestionInput!): Question
-  updateQuestionContainer(input: UpdateQuestionContainerInput!): QuestionContainer
+  updateQuestionContainer(
+    input: UpdateQuestionContainerInput!
+  ): QuestionContainer
   updateQuiz(input: UpdateQuizInput!): Quiz
 }
 
@@ -68,11 +74,31 @@ type Query {
   getQuestion(id: ID!): Question
   getQuestionContainer(id: ID!): QuestionContainer
   getQuiz(id: ID!): Quiz
-  listAnswers(filter: ModelAnswerFilterInput, limit: Int, nextToken: String): ModelAnswerConnection
-  listCorrectAnswers(filter: ModelCorrectAnswerFilterInput, limit: Int, nextToken: String): ModelCorrectAnswerConnection
-  listQuestionContainers(filter: ModelQuestionContainerFilterInput, limit: Int, nextToken: String): ModelQuestionContainerConnection
-  listQuestions(filter: ModelQuestionFilterInput, limit: Int, nextToken: String): ModelQuestionConnection
-  listQuizzes(filter: ModelQuizFilterInput, limit: Int, nextToken: String): ModelQuizConnection
+  listAnswers(
+    filter: ModelAnswerFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelAnswerConnection
+  listCorrectAnswers(
+    filter: ModelCorrectAnswerFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelCorrectAnswerConnection
+  listQuestionContainers(
+    filter: ModelQuestionContainerFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelQuestionContainerConnection
+  listQuestions(
+    filter: ModelQuestionFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelQuestionConnection
+  listQuizzes(
+    filter: ModelQuizFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelQuizConnection
 }
 
 type Question {
@@ -87,7 +113,12 @@ type QuestionContainer {
   correctAnswer: CorrectAnswer!
   createdAt: AWSDateTime!
   id: ID!
-  possibleAnswers(filter: ModelAnswerFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelAnswerConnection
+  possibleAnswers(
+    filter: ModelAnswerFilterInput
+    limit: Int
+    nextToken: String
+    sortDirection: ModelSortDirection
+  ): ModelAnswerConnection
   question: Question!
   questionNumber: Int!
   quizID: ID!
@@ -97,27 +128,38 @@ type QuestionContainer {
 type Quiz {
   createdAt: AWSDateTime!
   id: ID!
-  questions(filter: ModelQuestionContainerFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelQuestionContainerConnection
+  questions(
+    filter: ModelQuestionContainerFilterInput
+    limit: Int
+    nextToken: String
+    sortDirection: ModelSortDirection
+  ): ModelQuestionContainerConnection
   quizName: String!
   updatedAt: AWSDateTime!
 }
 
 type Subscription {
-  onCreateAnswer: Answer @aws_subscribe(mutations : ["createAnswer"])
-  onCreateCorrectAnswer: CorrectAnswer @aws_subscribe(mutations : ["createCorrectAnswer"])
-  onCreateQuestion: Question @aws_subscribe(mutations : ["createQuestion"])
-  onCreateQuestionContainer: QuestionContainer @aws_subscribe(mutations : ["createQuestionContainer"])
-  onCreateQuiz: Quiz @aws_subscribe(mutations : ["createQuiz"])
-  onDeleteAnswer: Answer @aws_subscribe(mutations : ["deleteAnswer"])
-  onDeleteCorrectAnswer: CorrectAnswer @aws_subscribe(mutations : ["deleteCorrectAnswer"])
-  onDeleteQuestion: Question @aws_subscribe(mutations : ["deleteQuestion"])
-  onDeleteQuestionContainer: QuestionContainer @aws_subscribe(mutations : ["deleteQuestionContainer"])
-  onDeleteQuiz: Quiz @aws_subscribe(mutations : ["deleteQuiz"])
-  onUpdateAnswer: Answer @aws_subscribe(mutations : ["updateAnswer"])
-  onUpdateCorrectAnswer: CorrectAnswer @aws_subscribe(mutations : ["updateCorrectAnswer"])
-  onUpdateQuestion: Question @aws_subscribe(mutations : ["updateQuestion"])
-  onUpdateQuestionContainer: QuestionContainer @aws_subscribe(mutations : ["updateQuestionContainer"])
-  onUpdateQuiz: Quiz @aws_subscribe(mutations : ["updateQuiz"])
+  onCreateAnswer: Answer @aws_subscribe(mutations: ["createAnswer"])
+  onCreateCorrectAnswer: CorrectAnswer
+    @aws_subscribe(mutations: ["createCorrectAnswer"])
+  onCreateQuestion: Question @aws_subscribe(mutations: ["createQuestion"])
+  onCreateQuestionContainer: QuestionContainer
+    @aws_subscribe(mutations: ["createQuestionContainer"])
+  onCreateQuiz: Quiz @aws_subscribe(mutations: ["createQuiz"])
+  onDeleteAnswer: Answer @aws_subscribe(mutations: ["deleteAnswer"])
+  onDeleteCorrectAnswer: CorrectAnswer
+    @aws_subscribe(mutations: ["deleteCorrectAnswer"])
+  onDeleteQuestion: Question @aws_subscribe(mutations: ["deleteQuestion"])
+  onDeleteQuestionContainer: QuestionContainer
+    @aws_subscribe(mutations: ["deleteQuestionContainer"])
+  onDeleteQuiz: Quiz @aws_subscribe(mutations: ["deleteQuiz"])
+  onUpdateAnswer: Answer @aws_subscribe(mutations: ["updateAnswer"])
+  onUpdateCorrectAnswer: CorrectAnswer
+    @aws_subscribe(mutations: ["updateCorrectAnswer"])
+  onUpdateQuestion: Question @aws_subscribe(mutations: ["updateQuestion"])
+  onUpdateQuestionContainer: QuestionContainer
+    @aws_subscribe(mutations: ["updateQuestionContainer"])
+  onUpdateQuiz: Quiz @aws_subscribe(mutations: ["updateQuiz"])
 }
 
 enum ModelSortDirection {

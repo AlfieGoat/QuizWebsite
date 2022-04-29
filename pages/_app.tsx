@@ -9,19 +9,19 @@ import { authRedirectIfNeededOnClient, setAuthCookie } from '../utils/auth'
 import { AppProps } from 'next/app'
 
 const theme = createTheme({
-    palette: {
-      primary: {
-        main: '#344055',
-      },
-      secondary: {
-        main: '#006DFD',
-      },
+  palette: {
+    primary: {
+      main: '#344055',
     },
-  })
+    secondary: {
+      main: '#006DFD',
+    },
+  },
+})
 
 const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   setAuthCookie()
-  authRedirectIfNeededOnClient();
+  authRedirectIfNeededOnClient()
   return (
     <ThemeProvider theme={theme}>
       <Component {...pageProps} />

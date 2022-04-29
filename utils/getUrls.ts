@@ -1,7 +1,7 @@
 export const getQuizUrl = (quizId: string): string => {
-    return `/quiz/${quizId}`
+  return `/quiz/${quizId}`
 }
 
 export const getEditQuizUrl = (quizId: string): string => {
-    return `/editQuiz/${quizId}`
+  return `/editQuiz/${quizId}`
 }

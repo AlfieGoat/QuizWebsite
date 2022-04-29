@@ -3,12 +3,18 @@ import { print } from 'graphql'
 import { GetServerSideProps } from 'next'
 import { NextRouter, useRouter } from 'next/router'
 import React from 'react'
-import { GetQuizDocument, GetQuizQuery, GetQuizWithCorrectAnswerDocument, GetQuizWithCorrectAnswerQuery } from '../../generated/graphql'
+import {
+  GetQuizDocument,
+  GetQuizQuery,
+  GetQuizWithCorrectAnswerDocument,
+  GetQuizWithCorrectAnswerQuery,
+} from '../../generated/graphql'
 import NavBar from '../../sections/NavBar'
 import QuizQuestionCard from '../../sections/QuizQuestionCard'
 import {
   authRedirectIfNeededOnServer,
-  getGroupFromContext, getTokenFromRequest
+  getGroupFromContext,
+  getTokenFromRequest,
 } from '../../utils/auth'
 import { COGNITO_GROUPS } from '../../utils/constants'
 import { makeQuery } from '../../utils/fetch'
@@ -27,8 +33,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   else if (group === COGNITO_GROUPS.USER) query = print(GetQuizDocument)
 
   const auth = getTokenFromRequest(context)
-  const result = (await makeQuery(query, auth, { id: context.params.id as string})).data
-    .data as GetQuizQuery | GetQuizWithCorrectAnswerQuery
+  const result = (
+    await makeQuery(query, auth, { id: context.params.id as string })
+  ).data.data as GetQuizQuery | GetQuizWithCorrectAnswerQuery
   return {
     props: { quiz: result, group }, // will be passed to the page component as props
   }
@@ -80,16 +87,17 @@ const Quiz = (props: QuizzesProps): JSX.Element => {
       {props.group === COGNITO_GROUPS.ADMIN ||
       props.group === COGNITO_GROUPS.MODERATOR ? (
         <>
-              <Link href={getEditQuizUrl(props.quiz.getQuiz.id)} underline="none">
-          <Button
-            sx={{ marginLeft: 'auto', maxHeight: 36.5, minWidth: 159 }}
-            variant="contained"
-            color="secondary"
-          >
-            Edit Quiz
-          </Button>
+          <Link href={getEditQuizUrl(props.quiz.getQuiz.id)} underline="none">
+            {props.group === COGNITO_GROUPS.ADMIN && (
+              <Button
+                sx={{ marginLeft: 'auto', maxHeight: 36.5, minWidth: 159 }}
+                variant="contained"
+                color="secondary"
+              >
+                Edit Quiz
+              </Button>
+            )}
           </Link>
-
           <AdminModeratorQuiz
             quiz={props.quiz as GetQuizWithCorrectAnswerQuery}
           />
@@ -108,13 +116,18 @@ const AdminModeratorQuiz = ({
 }) => {
   return (
     <>
-      {quiz.getQuiz.questions.items.map((question, i) => (
-        <QuizQuestionCard
-          question={question}
-          correctAnswerId={question.correctAnswer.answer.id}
-          key={i}
-        />
-      ))}
+      {quiz.getQuiz.questions.items
+        .sort(
+          (questionA, questionB) =>
+            questionA.questionNumber - questionB.questionNumber
+        )
+        .map((question, i) => (
+          <QuizQuestionCard
+            question={question}
+            correctAnswerId={question.correctAnswer.answer.id}
+            key={i}
+          />
+        ))}
     </>
   )
 }

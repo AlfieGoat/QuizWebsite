@@ -1,9 +1,7 @@
 import { LandingHead } from '../sections/LandingHead'
 
 export const Home = (): JSX.Element => {
-  return (
-      <LandingHead/>
-  )
+  return <LandingHead />
 }
 
 export default Home
